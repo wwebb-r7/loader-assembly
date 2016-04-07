@@ -89,7 +89,7 @@ _start:
   ; since the string we're comparing for is small, we may be able to
   ; keep this relatively small
   ; like
-  ; mov  rax, 0xbabababaabababab
+  ; mov  rax, 0x635f74726174735f    ; le("_start_c")
   ; lea  rdi, [rsi]
   ; scasq
   ; jz match_found
